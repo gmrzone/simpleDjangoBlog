@@ -1,0 +1,19 @@
+{% extends 'myblog/main.html' %}
+{% load static %}
+{% block cssfile %}
+{% endblock %}
+{% block title %}
+<title>Login</title>
+{% endblock %}
+{% block content %}
+<div class="signup-form-container">
+    <form method="POST" class="login-form" action="">
+        {% csrf_token %}
+       <label for="username" class="login-username" placeholder="Username">Username</label>
+       <input type="text"  name="username" value="Login" class="login-input">
+       <label for="username" class="login-username">Password</label>
+       <input type="password" name="password" value="Password" class="login-input">
+       <input type="submit" value="Login" class="login-button">
+    </form>
+    </div>
+{% endblock %}

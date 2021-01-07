@@ -1,0 +1,62 @@
+{% extends 'myblog/main.html' %}
+{% load static %}
+{% block cssfile %}
+{% endblock %}
+{% block title %}
+<title>{{profile.full_name}} Profile</title>
+{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col">
+        <img src="" width="100px">
+    </div>
+    <div class="col">
+      <h4 class="card-title">{{profile.full_name}}</h4>
+      <p class="card-text">You have Joined This Blog on {{profile.created}}</p>
+      <p>Gender : {{profile.gender}}</p>
+      <p>Profile Rank : {{profile_rank}}</p>
+      <p>Number : {{profile.number}} {% if profile.num_verified %}<small>Verified</small>{% else %}<small>Not Verified</small>{% endif %}</p>
+      <p>Email : {{profile.user.email   }}</p>
+      <p>Total Post : {{profile.post.all.count}}</p>
+      <p>Unpublished Post : </p>
+      {% if request.user.id == profile.user.id %}
+      <p>Unpublished Post : </p>
+      <a href="#" class="card-link"></a>
+      <a href="#" class="card-link">Update Profile</a>
+      {% endif %}
+      <p><small>Last Updated {{profile.updated}}</small></p>
+    </div>
+</div>
+{% if request.user.id == profile.user.id %}
+<h2>List of All Your Post{{profile.post.all.count|pluralize}}</h2>
+{% else %}
+<h2>Post{{profile.post.all.count|pluralize}} By {{profile.full_name}}</h2>
+{% endif %}
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Subtitle</th>
+        <th>Body</th>
+        <th>Status</th>
+        <th>Created</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for i in profile.post.all %}
+      {% if i.status == 'published' %}
+      <tr>
+          <td>{{i.title}}</td>
+          <td>{{i.subtitle}}</td>
+          <td>{{i.body|truncatewords:20}}</td>
+          <td>{{i.status}}</td>
+          <td>{{i.created}}</td>
+          <td><a href="{{i.get_post_absolute_url}}">View</a></td>
+      </tr>
+      {% endif %}
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

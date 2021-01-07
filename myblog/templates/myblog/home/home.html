@@ -1,0 +1,72 @@
+{% extends 'myblog/main.html' %}
+{% load static %}
+{% load blog_tags %}
+{% block cssfile %}
+
+{% endblock %}
+{% block title %}
+<title>Home Page</title>
+{% endblock %}
+{% block content %}
+{% if request.user.is_authenticated %}
+<p class="welcome-mssg">Welcome {{request.user}}</p>
+{% endif %}
+{% if search_bar %} <!--Only Show Search Bar if search_bar is True-->
+{% if search_input %}
+{% with posts_list.count as post_count %}
+<p>Search Result For {{search_input}} </p>
+<p>Found {{post_count}} Post{{post_count|pluralize}}</p>
+{% endwith %}
+{% endif %}
+<form class="form-inline my-2 my-lg-0" method="POST">
+    {% csrf_token %}
+  <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search", name="search-input">
+  <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+</form>
+{% endif %}
+{% if tag %}
+<h2>Post Tagged with {{tag.name}}</h2>
+{% else %}
+<!-- post_count is as simple tag -->
+<h2>Total Post on Blog : {% post_count %}</h2>
+{% endif %}
+<div class="extra-post">
+    <div class="side-bar">
+        <!-- here show_latest_post is inclusive tag and 3 is perameter for that tag -->
+        {% show_latest_post 3 %}
+    </div>
+    <div class="most-commented-Post">
+        <h5>Posts With Most Comments</h5>
+        <!-- Here post_with_wost_comment is template tag and 3 is perameter for simple tag -->
+        {% post_with_most_comments 3 as most_comments %}
+        <ui>
+            {% for post in most_comments %}
+            <li><a href="{{post.get_post_absolute_url}}">{{post.title}}</a></li>
+            {% endfor %}
+        </ui>
+    </div>
+</div>
+    <table class="table table-hover table-bordered">
+        <thead class="thead-dark">
+            <tr class="">
+                <th>Title</th>
+                <th>Published Date</th>
+                <th>Author</th>
+            </tr>
+            {% for i in posts %}
+            <tr>
+                <td><a href="{{i.get_post_absolute_url}}">{{i.title}}</a></td>
+                <td><a>{{i.publish}}</a></td>
+                <td><a href="{{ i.author.get_absolute_url }}">{{i.author.full_name}}</a></td>
+            </tr>
+            {% empty %}
+            <tr>
+            <td colspan="3">There is no Posts</td>
+            </tr>
+            {% endfor %}
+        </thead>
+    </table>
+    {% include "myblog/pagination.html" with current_page=posts %}  <!--using page_obj instead of current_page because of class Based View-->
+        <!-- {% include "myblog/pagination.html" with page_obj=posts %}  -->
+        <p><a href="{% url 'post_feed' %}">Subscribe To My RSS Feed</a></p>
+{% endblock %}

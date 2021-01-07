@@ -1,0 +1,24 @@
+{% extends 'myblog/main.html' %}
+[% load static %}
+{% block cssfile %}
+
+{% endblock %}
+{% block title %}
+<title>Create Post</title>
+{% endblock %}
+{% block content %}
+{% if post_created %}
+    {% if post_details.status == 'published' %}
+    <h2>Post Has Been Created Sucessfully</h2>
+    {% else %}
+    <h2>Post Has Been Created Sucessfully but not published. You Can Publish This Post In Your Profile</h2>
+    {% endif %}
+{% else %}
+<h3>Create A Post</h3>
+{% endif %}
+<form method="POST">
+    {% csrf_token %}
+    {{post_form.as_p}}
+    <input type="submit" value="Create Post">
+</form>
+{% endblock %}

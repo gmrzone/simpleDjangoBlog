@@ -1,0 +1,59 @@
+{% extends 'myblog/main.html' %}
+[% load static %}
+{% block cssfile %}
+{% load blog_tags %}
+{% endblock %}
+{% block title %}
+<title>Post Details</title>
+{% endblock %}
+{% block content %}
+<p>Post title : {{post_details.title}}</p>
+<p>Post Subtitle : {{post_details.subtitle}}</p>
+<p>Post Body : {{post_details.body|markdown}}</p>
+<p>Author of Post : <a href="{{profile.get_absolute_url}}">{{post_details.author.full_name}}</a></p>
+<p>Post Status : {{post_details.status}}</p>
+<p>Post Publish Date : {{post_details.publish}}</p>
+<p>Post Last Updated : {{post_details.updated}}</p>
+<p>Post Created : {{post_details.created}}</p>
+<a href="{% url 'share_post' post_details.id %}" class="share-post-link">Share This Post</a><br>
+<!-- <p class="tags">Post Tags : {{post_details.tag.all|join:", "}}</p> -->
+<p>Post Tags : 
+{% for tag in post_details.tag.all %}
+<a href="{% url 'list_post_by_tag' tag.slug %}">{{tag}}</a>{% if not forloop.last %}, {% endif %} <!--using if forloop.last to add comma in between tags-->
+{% endfor %}
+</p>
+<p>Total Comment{{comment_list.count|pluralize}} {{comment_list.count}}</p>
+{% for i in comment_list %}
+<p>{{i.comment_body}} posted by <a href="{{i.user.profile.get_absolute_url}}">{{i.user.username}}</a></p>
+{% endfor %}
+{% if similar_post %}
+<h3>Recommanded Posts</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th>title</th>
+            <th>Author</th>
+            <th></th>
+        </tr>
+    </thead>
+{% for post in similar_post %}
+<tr">
+    <td>{{post.title}}</td>
+    <td><a href="{{post.author.get_absolute_url}}">{{post.author}}</a></td>
+    <td><a href="{{post.get_post_absolute_url}}">View</a></td>
+</tr>
+{% endfor %}
+</table>
+{% else %}
+<p>There is No Post Similar To This Post Yes.</p>
+{% endif %}
+{% if request.user.is_authenticated %}
+<form method="POST">
+    {% csrf_token %}
+    <p>{{comment_form.comment_body}}</p>
+    <input type="submit" value="Post Comment">
+</form>
+{% else %}
+<p>You Have To <a href="{% url 'login' %}">Login</a> to Comment on This Posts</p>
+{% endif %}
+{% endblock %}

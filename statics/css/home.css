@@ -1,0 +1,24 @@
+.extra-post {
+    display: flex;
+    direction: row;
+    align-content: center;
+    justify-content: space-between;
+}
+
+#navbarSupportedContent {
+    align-items: center;
+    justify-content: space-between;
+}
+
+.welcome-mssg {
+    color: black;
+}
+
+.mr-auto {
+    margin-left: auto;
+    margin-right: 60px !important;
+}
+
+.navbar-brand {
+    margin-left: 60px !important;
+}

@@ -1,0 +1,30 @@
+{% extends 'myblog/main.html' %}
+[% load static %}
+{% block cssfile %}
+{% endblock %}
+{% block title %}
+<title>Post Details</title>
+{% endblock %}
+{% block content %}
+{% if sent %}
+<h2>Your Email Was Sent Sucessfully</h2>
+<p>Post for {{share_post.title}} was sucessfully sent to {{mail_to}}</p>
+{% else %}
+<h2>Share this Post "{{share_post.title}}" by Email.</h2>
+{% endif %}
+<div class="form-container">
+    <form method="POST" action="">
+        {% csrf_token %}
+        <p>{{email_form.name.label}}</p>
+        <p>{{email_form.name}}</p>
+        <p>{{email_form.email.label}}</p>
+        <p>{{email_form.email}}</p>
+        <p>{{email_form.to.label}}</p>
+        <p>{{email_form.to}}</p>
+        <p>{{email_form.comments.label}}</p>
+        <p>{{email_form.comments}}</p>
+        <input type="submit" value="Share">
+       
+    </form>
+    </div>
+{% endblock %}
